@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        * { margin: 0; padding: 0 }
+        body { font-family: Arial; background: #f5f7fa }
+        .nav { background: #667eea; color: #fff; padding: 20px }
+        .chat { max-width: 800px; margin: 30px auto; background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,.1) }
+        .messages { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px }
+        .msg { margin: 10px 0; padding: 10px 15px; border-radius: 8px; max-width: 70% }
+        .bot { background: #e3f2fd; text-align: left }
+        .user { background: #667eea; color: #fff; text-align: right; margin-left: auto }
+        .input-box { display: flex; gap: 10px }
+        input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px }
+        button { padding: 12px 25px; background: #667eea; color: #fff; border: none; border-radius: 8px; cursor: pointer }
+        button:hover { background: #764ba2 }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <h2>🏥 MediMate Chatbot</h2>
+    </div>
+    <div class="chat">
+        <div id="messages" class="messages"></div>
+        <div class="input-box">
+            <input id="input" placeholder="Type your message...">
+            <button onclick="send()">Send</button>
+        </div>
+    </div>
+    <script>
+        let history = [];
+        let aid = {{appointment_id}};
+        function addMsg(txt, type) {
+            let d = document.createElement('div');
+            d.className = 'msg ' + type;
+            d.textContent = txt;
+            document.getElementById('messages').appendChild(d);
+            document.getElementById('messages').scrollTop = 999999;
+        }
+        addMsg('Hello! I am your MediMate assistant. What symptoms are you experiencing?', 'bot');
+        function send() {
+            let msg = document.getElementById('input').value;
+            if (!msg) return;
+            addMsg(msg, 'user');
+            history.push(msg);
+            document.getElementById('input').value = '';
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg, history: history, appointment_id: aid })
+            })
+            .then(r => r.json())
+            .then(data => {
+                addMsg(data.response, 'bot');
+                if (data.completed) {
+                    setTimeout(() => {
+                        alert('Consultation complete!');
+                        window.location.href = '/patient/dashboard';
+                    }, 2000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
