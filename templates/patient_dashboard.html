@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0 }
+        body { font-family: Arial; background: #f5f7fa }
+        .nav { background: #667eea; color: #fff; padding: 20px; display: flex; justify-content: space-between }
+        a { color: #fff; text-decoration: none }
+        .content { padding: 30px; max-width: 1200px; margin: 0 auto }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin: 20px 0 }
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,.1); text-align: center }
+        .btn { display: inline-block; padding: 10px 20px; background: #667eea; color: #fff; border-radius: 5px; margin-top: 10px; text-decoration: none }
+        .btn:hover { background: #764ba2 }
+        .badge { background: #4CAF50; color: #fff; padding: 5px 10px; border-radius: 20px; font-size: .9em }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <h2>🏥 MediMate</h2>
+        <span>{{session.name}} | <a href="/logout">Logout</a></span>
+    </div>
+    <div class="content">
+        <h2>Available Doctors</h2>
+        <div class="grid">
+            {% for d in doctors %}
+            <div class="card">
+                <h3>{{d.name}}</h3>
+                <p>{{d.specialization}}</p>
+                <p>📍 {{d.region}}</p>
+                <p>⭐⭐⭐⭐⭐ 4.8/5</p>
+                <a href="/book/{{d.user_id}}" class="btn">Book Appointment</a>
+            </div>
+            {% endfor %}
+        </div>
+        <h2 style="margin-top:40px">My Appointments</h2>
+        {% for a in appointments %}
+        <div class="card" style="text-align:left">
+            <h3>Dr. {{a.doctor_name}} - {{a.slot}} <span class="badge">{{a.status}}</span></h3>
+        </div>
+        {% else %}
+        <p>No appointments yet</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
