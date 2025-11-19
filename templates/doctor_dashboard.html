@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0 }
+        body { font-family: Arial; background: #f5f7fa }
+        .nav { background: #667eea; color: #fff; padding: 20px; display: flex; justify-content: space-between }
+        a { color: #fff; text-decoration: none }
+        .content { padding: 30px; max-width: 1200px; margin: 0 auto }
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,.1); margin: 15px 0 }
+        h3 { color: #667eea }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <h2>🏥 Doctor Dashboard</h2>
+        <span>Dr. {{session.name}} | <a href="/logout">Logout</a></span>
+    </div>
+    <div class="content">
+        <h2>Patient Summaries</h2>
+        {% for s in summaries %}
+        <div class="card">
+            <h3>Patient: {{s.patient_name}}</h3>
+            <p><strong>Summary:</strong></p>
+            <p>{{s.summary}}</p>
+            <p style="color:#888;font-size:.9em">{{s.date}}</p>
+        </div>
+        {% else %}
+        <p>No consultations yet</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
